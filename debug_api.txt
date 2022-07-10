@@ -1,0 +1,72 @@
+windbg内核通信协议看起来比较复杂，常见的包为信息包和控制包、中断包。经过观察，有一些点需要注意：
+1.管道读写，端口读写或者其他与内核通信的方式，有时候会缺失数据，比如本来是0x30303030的信息包，下面0x50处少一个0x30，现在的0x30是我后补上去的，编写通信模块需要注意这一部分
+2.读写被调试主机传来的数据，用的是ReadFile/WriteFile，且很多时候是一个/若干个字节read/write一次，不明白为何这么低效！！！这样做就需要我们构建好数据包，再给数据包分析函数处理，主要是处理通信过程
+
+API与结构体的映射
+RemoteOperation	CommandId	LocalApi
+DbgKdReadVirtualMemoryApi	0x00003130L	ReadMemory
+DbgKdWriteVirtualMemoryApi	0x00003131L	WriteMemory
+DbgKdGetContextApi	0x00003132L	null
+DbgKdSetContextApi	0x00003133L	null
+DbgKdWriteBreakPointApi	0x00003134L	WriteBreakPoint
+DbgKdRestoreBreakPointApi	0x00003135L	RestoreBreakPoint
+DbgKdContinueApi	0x00003136L	Continue
+DbgKdReadControlSpaceApi	0x00003137L	ReadMemory
+DbgKdWriteControlSpaceApi	0x00003138L	WriteMemory
+DbgKdReadIoSpaceApi	0x00003139L	ReadWriteIo
+DbgKdWriteIoSpaceApi	0x0000313AL	ReadWriteIo
+DbgKdRebootApi	0x0000313BL	null
+DbgKdContinueApi2	0x0000313CL	Continue2
+DbgKdReadPhysicalMemoryApi	0x0000313DL	ReadMemory
+DbgKdWritePhysicalMemoryApi	0x0000313EL	WriteMemory
+DbgKdQuerySpecialCallsApi	0x0000313FL	QuerySpecialCalls
+DbgKdSetSpecialCallApi	0x00003140L	SetSpecialCall
+DbgKdClearSpecialCallsApi	0x00003141L	null
+DbgKdSetInternalBreakPointApi	0x00003142L	SetInternalBreakpoint
+DbgKdGetInternalBreakPointApi	0x00003143L	GetInternalBreakpoint
+DbgKdReadIoSpaceExtendedApi	0x00003144L	ReadWriteIoExtended
+DbgKdWriteIoSpaceExtendedApi	0x00003145L	ReadWriteIoExtended
+DbgKdGetVersionApi	0x00003146L	GetVersion32
+DbgKdWriteBreakPointExApi	0x00003147L	BreakPointEx
+DbgKdRestoreBreakPointExApi	0x00003148L	null
+DbgKdCauseBugCheckApi	0x00003149L	null
+DbgKdSwitchProcessor	0x00003150L	null
+DbgKdPageInApi	0x00003151L	null
+DbgKdReadMachineSpecificRegister	0x00003152L	ReadWriteMsr
+DbgKdWriteMachineSpecificRegister	0x00003153L	ReadWriteMsr
+OldVlm1	0x00003154L	null
+OldVlm2	0x00003155L	null
+DbgKdSearchMemoryApi	0x00003156L	SearchMemory
+DbgKdGetBusDataApi	0x00003157L	null
+DbgKdSetBusDataApi	0x00003158L	null
+DbgKdCheckLowMemoryApi	0x00003159L	null
+DbgKdClearAllInternalBreakpointsApi	0x0000315AL	null
+DbgKdFillMemoryApi	0x0000315BL	null
+DbgKdQueryMemoryApi	0x0000315CL	null
+DbgKdSwitchPartition	0x0000315DL	null
+
+typedef struct _DBGKD_ANY_WAIT_STATE_CHANGE
+ {
+     ULONG NewState;
+     USHORT ProcessorLevel;
+     USHORT Processor;
+     ULONG NumberProcessors;
+     ULONG64 Thread;
+     ULONG64 ProgramCounter;
+     union
+         {
+         DBGKM_EXCEPTION64 Exception;
+         DBGKD_LOAD_SYMBOLS64 LoadSymbols;
+         DBGKD_COMMAND_STRING CommandString;
+     } u;
+     union
+         {
+         DBGKD_CONTROL_REPORT ControlReport;
+         DBGKD_ANY_CONTROL_REPORT AnyControlReport;
+     };
+ } DBGKD_ANY_WAIT_STATE_CHANGE, *PDBGKD_ANY_WAIT_STATE_CHANGE;
+
+作者：超哥__
+链接：https://www.jianshu.com/p/d83e68a77a33
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
