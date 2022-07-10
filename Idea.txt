@@ -1,0 +1,8 @@
+1. Need a protocol translator that runs on host
+2. It utilizes GDB RSP protocol and translate to kdcom protocol
+
+
+
+Target (kdcom)  <----->  KdProxy (Host) <----> windbg (host)
+
+
