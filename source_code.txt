@@ -1,0 +1,3 @@
+https://miaione.github.io/apiexplorer/d8/d3/kdapi_8c.html
+https://miaione.github.io/apiexplorer/d9/d4/kdcomio_8c.html
+https://miaione.github.io/apiexplorer/d0/d6/kddbgio_8c.html#a0
