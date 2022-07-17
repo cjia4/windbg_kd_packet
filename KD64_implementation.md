@@ -9,5 +9,5 @@ https://github.com/toddsharpe/MetalOS/blob/d03e06546a165c5153909efae73f581789cdf
 https://github.com/toddsharpe/MetalOS/blob/master/_Screenshots/WinDbgInit.PNG
 https://github.com/toddsharpe/MetalOS/blob/master/_Screenshots/WinDbgDemo.mp4
 
-# lisp kernel
-[https://github.com/HBelusca/NasuTek-Odyssey](https://github.com/denim2x/ccl/wiki/Lisp-kernel:-compatibility-with-WinDbg)
+
+
